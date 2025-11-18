@@ -1,7 +1,11 @@
-from selenium.webdriver.common.by import By
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from pages.main_page import MainPage
 
 def test_guest_can_go_to_login_page(browser):
     link = "http://selenium1py.pythonanywhere.com/"
-    browser.get(link)
-    login_link = browser.find_element(By.CSS_SELECTOR, "#login_link")
-    login_link.click()
+    page = MainPage(browser, link)
+    page.open()
+    page.go_to_login_page()
