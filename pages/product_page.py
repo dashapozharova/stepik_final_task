@@ -2,6 +2,8 @@ from .base_page import BasePage
 from .locators import ProductPageLocators
 import math
 from selenium.common.exceptions import NoAlertPresentException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 class ProductPage(BasePage):
     def add_to_basket(self):
@@ -29,13 +31,21 @@ class ProductPage(BasePage):
             print("No second alert presented")
     
     def should_be_product_added_to_basket(self):
+        # Только проверка, без добавления в корзину
         product_name = self.get_product_name()
-        message_product_name = self.browser.find_element(*ProductPageLocators.SUCCESS_MESSAGE_PRODUCT_NAME).text
+        message_element = WebDriverWait(self.browser, 15).until(
+            EC.presence_of_element_located(ProductPageLocators.SUCCESS_MESSAGE_PRODUCT_NAME)
+        )
+        message_product_name = message_element.text
         assert product_name == message_product_name, f"Product name doesn't match. Expected: '{product_name}', got: '{message_product_name}'"
     
     def should_be_basket_total_equal_to_product_price(self):
+        # Только проверка, без добавления в корзину
         product_price = self.get_product_price()
-        basket_total_price = self.browser.find_element(*ProductPageLocators.BASKET_TOTAL_PRICE).text
+        basket_element = WebDriverWait(self.browser, 15).until(
+            EC.presence_of_element_located(ProductPageLocators.BASKET_TOTAL_PRICE)
+        )
+        basket_total_price = basket_element.text
         assert product_price == basket_total_price, f"Product price doesn't match basket total. Expected: '{product_price}', got: '{basket_total_price}'"
     
     def should_not_be_success_message(self):
